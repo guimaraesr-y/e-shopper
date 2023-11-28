@@ -1,0 +1,84 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// Definir o modelo User, que representa a tabela users
+model User {
+  id        Int         @id @default(autoincrement())
+  name      String
+  email     String      @unique
+  password  String
+  username  String      @unique
+  lastName  String 
+  balance   Decimal     @db.Decimal(10, 2) @default(0)
+  is_active Boolean     @default(true)
+  address   Address[]   
+  sales     Sale[]      
+  roles     Role[]      
+  products  Product[] 
+}
+
+// Definir o modelo Address, que representa a tabela address
+model Address {
+  id          Int    @id @default(autoincrement()) // Indicar que o campo id é a chave primária e é do tipo Int
+  userId      Int    // Indicar que o campo userId é do tipo Int
+  title       String // Indicar que o campo title é do tipo String
+  addressLine String // Indicar que o campo addressLine é do tipo String
+  number      String // Indicar que o campo number é do tipo String
+  complement  String // Indicar que o campo complement é do tipo String
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade) // Indicar que o campo user tem uma relação um-para-um com o modelo User e referencia o campo id do User
+}
+
+// Definir o modelo Sale, que representa a tabela sales
+model Sale {
+  id       Int            @id @default(autoincrement()) // Indicar que o campo id é a chave primária e é do tipo Int
+  userId   Int
+  discount Decimal        @db.Decimal(10,2) @default(0)
+  state    String    
+  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade) // Indicar que o campo user tem uma relação um-para-um com o modelo User e referencia o campo id do User
+  products ProductSale[] // Indicar que o campo products tem uma relação muitos-para-muitos com o modelo Product
+}
+
+// Definir o modelo Role, que representa a tabela roles
+model Role {
+  id    Int    @id @default(autoincrement()) // Indicar que o campo id é a chave primária e é do tipo Int
+  name  String // Indicar que o campo name é do tipo String
+  users User[] // Indicar que o campo users tem uma relação muitos-para-muitos com o modelo User
+}
+
+// Definir o modelo Product, que representa a tabela products
+model Product {
+  id          Int     @id @default(autoincrement())
+  ownerId     Int     
+  title       String  
+  description String  
+  price       Decimal @db.Decimal(10, 2)
+  owner       User    @relation(fields: [ownerId], references: [id], onDelete: Cascade) // Indicar que o campo owner tem uma relação um-para-um com o modelo User e referencia o campo id do User
+  media       Media[] 
+  sales       ProductSale[]  
+}
+
+// Definir o modelo Media, que representa a tabela media
+model Media {
+  id        Int     @id @default(autoincrement()) // Indicar que o campo id é a chave primária e é do tipo Int
+  productId Int     // Indicar que o campo productId é do tipo Int
+  url       String  // Indicar que o campo url é do tipo String
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade) // Indicar que o campo product tem uma relação um-para-um com o modelo Product e referencia o campo id do Product
+}
+
+model ProductSale {
+  id Int @id @default(autoincrement())
+  saleId    Int
+  productId Int
+  quantity  Int
+  sale      Sale @relation(fields: [saleId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
