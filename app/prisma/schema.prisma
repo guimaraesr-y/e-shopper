@@ -34,24 +34,27 @@ model Address {
   addressLine String // Indicar que o campo addressLine é do tipo String
   number      String // Indicar que o campo number é do tipo String
   complement  String // Indicar que o campo complement é do tipo String
-  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade) // Indicar que o campo user tem uma relação um-para-um com o modelo User e referencia o campo id do User
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sales       Sale[]
 }
 
 // Definir o modelo Sale, que representa a tabela sales
 model Sale {
-  id       Int            @id @default(autoincrement()) // Indicar que o campo id é a chave primária e é do tipo Int
-  userId   Int
-  discount Decimal        @db.Decimal(10,2) @default(0)
-  state    String    
-  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade) // Indicar que o campo user tem uma relação um-para-um com o modelo User e referencia o campo id do User
-  products ProductSale[] // Indicar que o campo products tem uma relação muitos-para-muitos com o modelo Product
+  id        Int            @id @default(autoincrement()) // Indicar que o campo id é a chave primária e é do tipo Int
+  userId    Int
+  addressId Int
+  discount  Decimal        @db.Decimal(10,2) @default(0)
+  state     String    
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade) // Indicar que o campo user tem uma relação um-para-um com o modelo User e referencia o campo id do User
+  products  ProductSale[] // Indicar que o campo products tem uma relação muitos-para-muitos com o modelo Product
+  address   Address        @relation(fields: [addressId], references: [id], onDelete: Cascade)
 }
 
 // Definir o modelo Role, que representa a tabela roles
 model Role {
   id    Int    @id @default(autoincrement()) // Indicar que o campo id é a chave primária e é do tipo Int
-  name  String // Indicar que o campo name é do tipo String
-  users User[] // Indicar que o campo users tem uma relação muitos-para-muitos com o modelo User
+  name  String @unique
+  users User[]
 }
 
 // Definir o modelo Product, que representa a tabela products
