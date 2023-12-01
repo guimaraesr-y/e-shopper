@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev app/index.ts",
-    "prebuild": "prisma migrate deploy",
+    "prebuild": "prisma migrate deploy && prisma db seed",
     "build": "tsc",
     "start": "node build/index.js",
     "test": "jest"
@@ -37,6 +37,7 @@
     "typescript": "^5.3.2"
   },
   "prisma": {
-    "schema": "app/prisma/schema.prisma"
+    "schema": "app/prisma/schema.prisma",
+    "seed": "ts-node app/prisma/seed.ts"
   }
 }

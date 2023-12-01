@@ -15,8 +15,8 @@ async function main() {
 
     const admin = await prisma.user.create({
         data: {
-            name: "Ryan",
-            lastName: "Guimarães",
+            name: "Admin",
+            lastName: "Administrador",
             username: "admin",
             email: "admin@eshopper.com",
             password: Hasher.hashPassword("admin"),
@@ -38,5 +38,4 @@ main()
     .catch(async (e) => {
         console.error(e)
         await prisma.$disconnect()
-        process.exit(1)
     })
