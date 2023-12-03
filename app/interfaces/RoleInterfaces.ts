@@ -1,3 +1,4 @@
+import { RoleEnum } from "../role/enum"
 import { IUser } from "./UserInterfaces"
 
 export interface IRole extends ICreateRole {
@@ -5,7 +6,7 @@ export interface IRole extends ICreateRole {
 }
 
 export interface ICreateRole {
-    name: string
+    name: RoleEnum
 }
 
 export interface IUpdateRole extends Partial<ICreateRole> {}

@@ -8,7 +8,8 @@
     "prebuild": "prisma migrate deploy && prisma db seed",
     "build": "tsc",
     "start": "node build/index.js",
-    "test": "jest"
+    "pretest": "dotenv -e .env.test -- prisma db push --force-reset && dotenv -e .env.test -- prisma db seed",
+    "test": "dotenv -e .env.test -- jest"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +17,7 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.6",
+    "dotenv-cli": "^7.3.0",
     "dotenv-safe": "^8.2.0",
     "express": "^4.18.2",
     "joi": "^17.11.0",

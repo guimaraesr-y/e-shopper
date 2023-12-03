@@ -8,6 +8,8 @@ import { BadRequest } from "../errors/BadRequest";
 import Jwt from "../utils/jwt";
 import { Decimal } from "@prisma/client/runtime/library";
 import Hasher from "../utils/hasher";
+import { IRoleService, RoleService } from "../role/service";
+import { RoleEnum } from "../role/enum";
 
 const prisma = new PrismaClient();
 
@@ -27,9 +29,12 @@ export interface IUserService {
 export class UserService implements IUserService {
 
     private _repository: IUserRepository
+    
+    private _roleService: IRoleService
 
-    constructor(repository = new UserRepository(prisma)) {
+    constructor(repository = new UserRepository(prisma), roleService = new RoleService()) {
         this._repository = repository
+        this._roleService = roleService
     }
 
     public async getAllUsers(): Promise<UserDto[]> {
@@ -63,6 +68,8 @@ export class UserService implements IUserService {
         if(await this._repository.getUserByUsername(data.username)) throw new Conflict("Username already exists");
 
         const user = UserDto.parse(await this._repository.createUser(data));
+        this._roleService.assignRole(user.id, RoleEnum.User);
+        
         return user;
     }
     

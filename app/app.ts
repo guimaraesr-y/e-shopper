@@ -3,6 +3,7 @@ import cookieParser from "cookie-parser";
 
 import UserFactory from "./user/factory";
 import ErrorHandler from "./middlewares/errorHandler.";
+import RoleFactory from "./role/factory";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(cookieParser());
 
 // app modules routes
 app.use('/user', UserFactory.userRouter);
+app.use('/role', RoleFactory.roleRouter);
 
 // express error handler
 app.use(ErrorHandler.error);

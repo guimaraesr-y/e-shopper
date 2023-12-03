@@ -1,56 +1,51 @@
 import { UserService } from "../service";
 import { UserDto } from "../dto";
 
-describe("UserService - Correct Tests", () => {
+describe("UserService - Tests", () => {
     const userService = new UserService();
-    
-    describe("UserService tests - Create and Delete Users", () => {
-        var user: UserDto;
 
-        it("Should create user", async() => {
-            user = await userService.createUser({
-                name: "test",
-                lastName: "tester",
-                email: "test1@example.com",
-                password: "test",
-                username: "test1",
-            })
+    var john: UserDto;
 
-            expect(user).toBeInstanceOf(Object)
-        })
-
-        it("Should delete user", () => {
-            userService.deleteUser(user.id)
-                .then(user => {
-                    expect(user).toBeInstanceOf(Object)
-                })
+    beforeAll(async () => {
+        john = await userService.createUser({
+            name: "John",
+            lastName: "Roffman",
+            email: "john@example.com",
+            password: "test",
+            username: "johnroffman",
         })
     })
 
+    afterAll(async () => {
+        const deleted = await userService.deleteUser(john.id);
+        expect(deleted).toBeInstanceOf(Object)
+    })
+
     describe("UserService tests - Updating and Returning Users", () => {
-        let user: UserDto
+
+        let maria: UserDto;
 
         beforeAll(async () => {
-            user = await userService.createUser({
-                name: "test",
-                lastName: "tester",
-                email: "test@example.com",
+            maria = await userService.createUser({
+                name: "Maria",
+                lastName: "Santos",
+                email: "maria@example.com",
                 password: "test",
-                username: "test",
+                username: "mariasantos",
             })
         })
-        
+
         afterAll(async () => {
-            await userService.deleteUser(user.id);
+            await userService.deleteUser(maria.id)
         })
 
         it("Should update user", () => {
-            userService.updateUser(user.id, {
-                name: "test",
-                lastName: "tester",
-                email: "test2@example.com",
+            userService.updateUser(maria.id, {
+                name: "Maria",
+                lastName: "Santos",
+                email: "maria@example.com",
                 password: "test",
-                username: "test2",
+                username: "mariasantos",
             })
                 .then(user => {
                     expect(user).toBeInstanceOf(Object)
@@ -60,43 +55,41 @@ describe("UserService - Correct Tests", () => {
         it("Should return all users", () => {
             userService.getAllUsers()
                 .then(users => {
-                    console.log(users)
                     expect(users).toBeInstanceOf(Array)
-                    if(users[0]) expect(users[0].id).toBeInstanceOf(Number)
+                    if(users[0]) expect(typeof users[0].id).toBe("number")
                 })
         })
 
         it("Should return user by id", () => {
-            userService.getUser(user.id)
+            userService.getUser(maria.id)
                 .then(user => {
                     expect(user).toBeInstanceOf(Object)
-                    expect(user.id).toBeInstanceOf(Number)
+                    expect(typeof user.id).toBe("number");
                 })
         })
 
         it("Should return user by username", () => {
-            userService.getUserByUsername(user.username)
+            userService.getUserByUsername(maria.username)
                 .then(user => {
                     expect(user).toBeInstanceOf(Object)
-                    expect(user.id).toBeInstanceOf(Number)
+                    expect(typeof user.id).toBe("number");
                 })
         })
 
         it("Should return user by email", () => {
-            userService.getUserByEmail(user.email)
+            userService.getUserByEmail(maria.email)
                 .then(user => {
                     expect(user).toBeInstanceOf(Object)
-                    expect(user.id).toBeInstanceOf(Number)
+                    expect(typeof user.id).toBe("number");
                 })
         })
         
         it("Should return user by email", () => {
-            userService.getUserByEmail(user.email)
+            userService.getUserByEmail(maria.email)
                 .then(user => {
                     expect(user).toBeInstanceOf(Object)
-                    expect(user.id).toBeInstanceOf(Number)
+                    expect(typeof user.id).toBe("number");
                 })
         })
     })
 })
-
