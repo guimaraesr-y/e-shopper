@@ -2,11 +2,11 @@ import { IUser } from "./UserInterfaces"
 
 export interface IAddress extends ICreateAddress {
     id: number
+    userId: number
     user?: IUser
 }
 
 export interface ICreateAddress {
-    userId: number
     title: string
     addressLine: string
     number: string
