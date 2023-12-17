@@ -5,13 +5,13 @@ import { BadRequest } from "../errors/BadRequest"
 
 export interface IUserController {
     
-    getAllUsers(req: Request, res: Response, next?: NextFunction): any
-    getUser(req: Request, res: Response, next?: NextFunction): any
-    getUserByUsername(req: Request, res: Response, next?: NextFunction): any
-    createUser(req: Request, res: Response, next?: NextFunction): any
-    updateUser(req: Request, res: Response, next?: NextFunction): any
-    deleteUser(req: Request, res: Response, next?: NextFunction): any
-    login(req: Request, res: Response, next?: NextFunction): any
+    getAllUsers(req: Request, res: Response, next: NextFunction): any
+    getUser(req: Request, res: Response, next: NextFunction): any
+    getUserByUsername(req: Request, res: Response, next: NextFunction): any
+    createUser(req: Request, res: Response, next: NextFunction): any
+    updateUser(req: Request, res: Response, next: NextFunction): any
+    deleteUser(req: Request, res: Response, next: NextFunction): any
+    login(req: Request, res: Response, next: NextFunction): any
 
 }
 

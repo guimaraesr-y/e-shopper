@@ -5,16 +5,16 @@ import { IUser } from "./UserInterfaces"
 
 export interface IProduct extends ICreateProduct {
     id: number
+    ownerId: number
+    owner?: IUser
+    sales?: ISale[]
+    media?: IMedia[]
 }
 
 export interface ICreateProduct {
-    ownerId: number
     title: string
     description: string
     price: Decimal
-    owner?: IUser
-    media?: IMedia[]
-    sales?: ISale[]
 }
 
 export interface IUpdateProduct extends Partial<ICreateProduct> {}
