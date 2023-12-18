@@ -6,10 +6,10 @@ import { Conflict } from "../errors/Conflict";
 import { UserDto } from "./dto";
 import { BadRequest } from "../errors/BadRequest";
 import Jwt from "../utils/jwt";
-import { Decimal } from "@prisma/client/runtime/library";
 import Hasher from "../utils/hasher";
 import { IRoleService, RoleService } from "../role/service";
 import { RoleEnum } from "../role/enum";
+import { Unauthorized } from "../errors/Unauthorized";
 
 const prisma = new PrismaClient();
 
@@ -20,8 +20,8 @@ export interface IUserService {
     getUserByUsername(username: string): Promise<UserDto | null>
     getUserByEmail(email: string): Promise<UserDto | null>
     createUser(data: ICreateUser): Promise<UserDto>
-    updateUser(id: number, data: IUpdateUser): Promise<UserDto>
-    deleteUser(id: number): Promise<UserDto>
+    updateUser(userId: number, id: number, data: IUpdateUser): Promise<UserDto>
+    deleteUser(userId: number, id: number): Promise<UserDto>
     login(data: ILoginUser): Promise<string>
 
 }
@@ -73,7 +73,7 @@ export class UserService implements IUserService {
         return user;
     }
     
-    public async updateUser(id: number, data: IUpdateUser): Promise<UserDto> { // implementar validação?
+    public async updateUser(userId: number, id: number, data: IUpdateUser): Promise<UserDto> { // implementar validação?
         const user = await this._repository.getUser(id);
         if(!user) throw new NotFound("User not found");
 
@@ -83,13 +83,15 @@ export class UserService implements IUserService {
         if(data.email && data.email !== user.email)
             if(await this._repository.getUserByEmail(data.email)) throw new Conflict("Email already exists");
 
-        // console.log('user:', user)
-        // console.log('data:', data)
         return await this._repository.updateUser(id, data)
     }
 
-    public async deleteUser(id: number): Promise<UserDto> {
-        if(!await this._repository.getUser(id)) throw new NotFound("User not found");
+    public async deleteUser(userId: number, id: number): Promise<UserDto> {
+        const user = await this._repository.getUser(id)
+
+        if(user && user.id !== userId) throw new Unauthorized("You are not authorized to access this user");
+        if(!user) throw new NotFound("User not found");
+
         return await this._repository.deleteUser(id);
     }
 

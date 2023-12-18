@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { UserController } from "./controller";
 import UserValidation from "../middlewares/userValidation";
+import AuthHandler from "../middlewares/auth";
 
 export default class UserRouter {
     
@@ -16,8 +17,8 @@ export default class UserRouter {
         this._router.get('/username/:username', (req, res, next) => this._controller.getUserByUsername(req, res, next));
 
         this._router.post('/', UserValidation.createValidation, (req, res, next) => this._controller.createUser(req, res, next));
-        this._router.put("/:id", UserValidation.updateValidation, (req, res, next) => this._controller.updateUser(req, res, next));
-        this._router.delete("/:id", (req, res, next) => this._controller.deleteUser(req, res, next));
+        this._router.put("/:id", AuthHandler.checkAuth, UserValidation.updateValidation, (req, res, next) => this._controller.updateUser(req, res, next));
+        this._router.delete("/:id", AuthHandler.checkAuth, (req, res, next) => this._controller.deleteUser(req, res, next));
 
         this._router.post('/auth', UserValidation.loginValidation, (req, res, next) => this._controller.login(req, res, next));
     }

@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express"
 import { IUserService, UserService } from "./service"
 import { ICreateUser, ILoginUser, IUpdateUser } from "../interfaces/UserInterfaces"
 import { BadRequest } from "../errors/BadRequest"
+import { IRequest } from "../interfaces/ExpressInterfaces"
 
 export interface IUserController {
     
@@ -68,25 +69,27 @@ export class UserController implements IUserController {
         }
     }
 
-    public async updateUser(req: Request, res: Response, next: NextFunction) {
+    public async updateUser(req: IRequest, res: Response, next: NextFunction) {
         const { id } = req.params
         const { body }: { body: IUpdateUser } = req
+        const userId = req.user!.id
 
         console.log('body:', body)
 
         try {
-            const user = await this._service.updateUser(Number(id), body)
+            const user = await this._service.updateUser(userId, Number(id), body)
             res.json(user);
         } catch (error) {
             next(error)
         }
     }
 
-    public async deleteUser(req: Request, res: Response, next: NextFunction) {
+    public async deleteUser(req: IRequest, res: Response, next: NextFunction) {
         const { id } = req.params
+        const userId = req.user!.id
         
         try {
-            const user = await this._service.deleteUser(Number(id))
+            const user = await this._service.deleteUser(userId, Number(id))
             res.json(user);
         } catch (error) {
             next(error)

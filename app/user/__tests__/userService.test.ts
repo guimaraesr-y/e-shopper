@@ -17,7 +17,7 @@ describe("UserService - Tests", () => {
     })
 
     afterAll(async () => {
-        const deleted = await userService.deleteUser(john.id);
+        const deleted = await userService.deleteUser(john.id, john.id);
         expect(deleted).toBeInstanceOf(Object)
     })
 
@@ -36,11 +36,11 @@ describe("UserService - Tests", () => {
         })
 
         afterAll(async () => {
-            await userService.deleteUser(maria.id)
+            await userService.deleteUser(maria.id, maria.id)
         })
 
         it("Should update user", () => {
-            userService.updateUser(maria.id, {
+            userService.updateUser(maria.id, maria.id, {
                 name: "Maria",
                 lastName: "Santos",
                 email: "maria@example.com",
